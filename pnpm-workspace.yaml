@@ -8,16 +8,16 @@ minimumReleaseAgeExclude:
   - '@eslint-react/jsx@5.21.1'
   - '@eslint-react/shared@5.21.1'
   - '@eslint-react/var@5.21.1'
-  - '@kitschpatrol/cspell-config@8.10.1'
-  - '@kitschpatrol/eslint-config@8.10.1'
-  - '@kitschpatrol/knip-config@8.10.1'
-  - '@kitschpatrol/mdat-config@8.10.1'
-  - '@kitschpatrol/prettier-config@8.10.1'
-  - '@kitschpatrol/remark-config@8.10.1'
-  - '@kitschpatrol/repo-config@8.10.1'
-  - '@kitschpatrol/shared-config@8.10.1'
-  - '@kitschpatrol/stylelint-config@8.10.1'
-  - '@kitschpatrol/typescript-config@8.10.1'
+  - '@kitschpatrol/cspell-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/eslint-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/knip-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/mdat-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/prettier-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/remark-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/repo-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/shared-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/stylelint-config@8.10.1 || 8.11.0'
+  - '@kitschpatrol/typescript-config@8.10.1 || 8.11.0'
   - '@pnpm/crypto.hash@1100.0.7'
   - '@pnpm/crypto.integrity@1100.0.8'
   - '@pnpm/deps.path@1101.0.5'
@@ -25,7 +25,7 @@ minimumReleaseAgeExclude:
   - '@pnpm/fetching.fetcher-base@1100.2.12'
   - '@pnpm/fs.graceful-fs@1100.2.4'
   - '@pnpm/hooks.types@1101.0.5'
-  - '@pnpm/lockfile.fs@1100.2.10'
+  - '@pnpm/lockfile.fs@1100.2.10 || 1100.2.12'
   - '@pnpm/lockfile.merger@1100.0.25'
   - '@pnpm/lockfile.types@1100.1.4'
   - '@pnpm/lockfile.utils@1102.1.5'
@@ -40,6 +40,8 @@ minimumReleaseAgeExclude:
   - eslint-plugin-react-rsc@5.21.1
   - eslint-plugin-react-web-api@5.21.1
   - eslint-plugin-react-x@5.21.1
+  - eslint-plugin-jsdoc@65.1.0
+  - mdat@3.5.0
 publicHoistPattern:
   - '@kitschpatrol/repo-config'
   - '@kitschpatrol/typescript-config'

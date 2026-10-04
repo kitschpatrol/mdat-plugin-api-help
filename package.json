@@ -51,14 +51,14 @@
 		"zod": "^4.6.5"
 	},
 	"devDependencies": {
-		"@kitschpatrol/shared-config": "^8.10.1",
+		"@kitschpatrol/shared-config": "^8.11.0",
 		"@types/node": "~24.13.3",
 		"bumpp": "^12.3.0",
-		"mdat": "^3.4.1",
+		"mdat": "^3.5.0",
 		"shx": "^0.4.0",
 		"tsdown": "^0.23.0",
 		"typescript": "~6.0.3",
-		"vitest": "^5.0.2"
+		"vitest": "^5.0.3"
 	},
 	"peerDependencies": {
 		"mdat": "^3.0.0",
