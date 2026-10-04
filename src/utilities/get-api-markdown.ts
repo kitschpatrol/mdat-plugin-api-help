@@ -12,7 +12,10 @@ import { convertProject } from './typedoc-project'
  * Fully resolved options for generating API Markdown.
  */
 export type ApiMarkdownOptions = Omit<ProjectOptions, 'outputDirectory'> & {
-	/** Heading level for the shallowest headings in the output (1–6). */
+	/**
+	 * Heading level for the shallowest headings in the output. Levels deeper than
+	 * 6 are rendered as bold text.
+	 */
 	headingLevel: number
 }
 
@@ -23,7 +26,7 @@ export type ApiMarkdownOptions = Omit<ProjectOptions, 'outputDirectory'> & {
  *   entry point has no documentable exports.
  */
 export async function getApiMarkdown(options: ApiMarkdownOptions): Promise<string> {
-	const outputDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'mdat-plugin-api-'))
+	const outputDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'mdat-plugin-api-help-'))
 	log.debug(`Generating ${options.format} API docs for ${options.entryPoint} in ${outputDirectory}`)
 
 	try {

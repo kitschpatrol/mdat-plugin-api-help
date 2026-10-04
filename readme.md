@@ -1,13 +1,13 @@
 <!-- title -->
 
-# mdat-plugin-api
+# mdat-plugin-api-help
 
 <!-- /title -->
 
-<!-- badges({ npm: []}) -->
+<!-- badges -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
-[![CI](https://github.com/kitschpatrol/mdat-plugin-api/actions/workflows/ci.yml/badge.svg)](https://github.com/kitschpatrol/mdat-plugin-api/actions/workflows/ci.yml)
+[![CI](https://github.com/kitschpatrol/mdat-plugin-api-help/actions/workflows/ci.yml/badge.svg)](https://github.com/kitschpatrol/mdat-plugin-api-help/actions/workflows/ci.yml)
 
 <!-- /badges -->
 
@@ -40,38 +40,38 @@ You'll need [mdat](https://github.com/kitschpatrol/mdat) installed either global
 Install the plugin as a development dependency:
 
 ```bash
-pnpm add -D mdat-plugin-api
+pnpm add -D mdat-plugin-api-help
 ```
 
 Register the plugin in your mdat config file, e.g. `mdat.config.ts`:
 
 ```ts
 import { defineConfig } from 'mdat'
-import apiPlugin from 'mdat-plugin-api'
+import apiHelpPlugin from 'mdat-plugin-api-help'
 
 export default defineConfig({
-  ...apiPlugin,
+  ...apiHelpPlugin,
 })
 ```
 
 ## Usage
 
-Add an `<!-- api -->` placeholder comment to your Markdown file:
+Add an `<!-- api-help -->` placeholder comment to your Markdown file:
 
 ```markdown
-## API
-
-<!-- api -->
+<!-- api-help -->
 ```
 
-Then run the `mdat` CLI from your package root to expand the placeholder. The plugin resolves the entry point and `tsconfig.json` relative to the working directory.
+Then run the `mdat` CLI from your package root to expand the placeholder into an "API" section. The plugin resolves the entry point and `tsconfig.json` relative to the working directory.
+
+The rule is also aliased under the `<!-- api -->` keyword.
 
 ### Options
 
-Options are passed as a JSON5 object in the placeholder comment. See [`ApiRuleOptions`](#apiruleoptions) for the full list.
+Options are passed as a JSON5 object in the placeholder comment. See [`ApiHelpRuleOptions`](#apihelpruleoptions) for the full list.
 
 ```markdown
-<!-- api({ format: 'compact', include: ['sync*', '*Options'] }) -->
+<!-- api-help({ format: 'compact', include: ['sync*', '*Options'] }) -->
 ```
 
 #### Full format
@@ -82,9 +82,9 @@ Parameter and return sections that would only repeat the signature are left out,
 
 This is the default format.
 
-Here's the full format applied to one function from the sample library, with `groupByKind: false` to skip the kind heading:
+Here's the full format applied to one function from the sample library, with `groupByKind: false` to skip the kind heading and `heading: false` to skip the section heading:
 
-<!-- api({ entryPoint: 'test/assets/fixtures/sample-lib.ts', include: ['greet'], groupByKind: false, headingLevel: 5 }) -->
+<!-- api-help({ entryPoint: 'test/assets/fixtures/sample-lib.ts', include: ['greet'], groupByKind: false, heading: false }) -->
 
 ##### greet()
 
@@ -117,15 +117,15 @@ const result = greet('Professor', { formal: true })
 console.log(result.message) // "Good day, Professor."
 ```
 
-<!-- /api -->
+<!-- /api-help -->
 
 #### Compact format
 
 This format creates one table row per export: the signature, the return type or definition, and the first paragraph of the description. Namespaces become nested sections with their own tables. Object types are expanded one level deep, and anything nested deeper is summarized as `object`.
 
-Here's the compact format applied to the whole sample library:
+Here's the compact format applied to the whole sample library, again with `heading: false`:
 
-<!-- api({ entryPoint: 'test/assets/fixtures/sample-lib.ts', format: 'compact', headingLevel: 5 }) -->
+<!-- api-help({ entryPoint: 'test/assets/fixtures/sample-lib.ts', format: 'compact', heading: false }) -->
 
 ##### Functions
 
@@ -155,16 +155,16 @@ Here's the compact format applied to the whole sample library:
 | --------------------- | ----- | -------------------------------- |
 | `MAX_GREETING_LENGTH` | `100` | Default maximum greeting length. |
 
-<!-- /api -->
+<!-- /api-help -->
 
 #### Selecting exports
 
-`include` and `exclude` take top-level export names, with `*` as a wildcard. A namespace is selected as a whole. Use several placeholders to document different parts of an API in different places, or to mix formats:
+`include` and `exclude` take top-level export names, with `*` as a wildcard. A namespace is selected as a whole. Use several placeholders to document different parts of an API in different places, or to mix formats. Pass `heading: false` to all but the first so the section heading isn't repeated:
 
 ```markdown
-<!-- api({ format: 'compact', exclude: ['*Options'] }) -->
+<!-- api-help({ format: 'compact', exclude: ['*Options'] }) -->
 
-<!-- api({ include: ['*Options'], groupByKind: false }) -->
+<!-- api-help({ include: ['*Options'], groupByKind: false, heading: false }) -->
 ```
 
 #### Namespaces
@@ -173,7 +173,25 @@ Namespaces (`export * as things from './things'`) are folded into the document u
 
 #### Headings
 
-Generated headings start at `headingLevel`, which defaults to 3 for placement under a level-two section heading. Full-format output for classes can nest several levels deeper. Headings that would pass level 6 are rendered as bold text instead.
+The rule emits its own "API" section heading at `headingLevel`, which defaults to 4 for placement under a level-three "Library" section, as in mdat's readme template:
+
+```markdown
+## Usage
+
+### Library
+
+<!-- api-help -->
+
+#### Examples
+```
+
+Pass a string to `heading` to change the heading text, or `heading: false` to leave it out when you've written your own heading above the placeholder or when several placeholders share one section.
+
+Generated headings start one level below `headingLevel`, whether or not the section heading is shown. Full-format output for classes can nest several levels deeper. Headings that would pass level 6 are rendered as bold text instead, which at the default level includes the Parameters, Returns, and Examples headings under each export. Pass a shallower `headingLevel` to keep them as headings:
+
+```markdown
+<!-- api-help({ headingLevel: 2 }) -->
+```
 
 #### What's documented
 
@@ -197,17 +215,17 @@ Build output paths are mapped back to their source, so a field pointing at `./di
 
 The plugin logs through [lognow](https://github.com/kitschpatrol/lognow). TypeDoc's own messages are routed through the same logger, with its informational output and validation warnings at the debug level. Pass your own logger to the exported `setLogger()` function to capture everything; it accepts a console-like object or a [LogLayer](https://loglayer.dev) instance.
 
+<!-- api-help({ include: ['ApiHelpRuleOptions'], groupByKind: false, headingLevel: 2 }) -->
+
 ## API
 
-<!-- api({ include: ['ApiRuleOptions'], groupByKind: false }) -->
+### ApiHelpRuleOptions
 
-### ApiRuleOptions
+> **ApiHelpRuleOptions** = `object`
 
-> **ApiRuleOptions** = `object`
+Options for the `<!-- api-help -->` rule.
 
-Options for the `<!-- api -->` rule.
-
-Pass them as a JSON5 object in the placeholder comment, e.g. `<!-- api({
+Pass them as a JSON5 object in the placeholder comment, e.g. `<!-- api-help({
 format: 'compact', include: ['greet', '*Options'] }) -->`.
 
 #### Properties
@@ -218,12 +236,13 @@ format: 'compact', include: ['greet', '*Options'] }) -->`.
 | `exclude?`      | `string`\[]             | `undefined`        | Names of top-level exports to leave out. Supports `*` wildcards, e.g. `['setLogger', 'default*']`. Applied after `include`.                                                                                                                                                                                              |
 | `format?`       | `"compact"` \| `"full"` | `'full'`           | Output style. `full` documents every export completely: signatures, parameter and property tables, and examples. `compact` renders one table row per export, with a subsection per namespace.                                                                                                                            |
 | `groupByKind?`  | `boolean`               | `true`             | Group exports under Functions, Classes, Type Aliases, etc. headings. When `false`, exports are listed together in `sort` order.                                                                                                                                                                                          |
-| `headingLevel?` | `number`                | `3`                | Heading level for the shallowest headings in the generated Markdown (1–6). Nested headings that would exceed level 6 are rendered as bold text.                                                                                                                                                                          |
+| `heading?`      | `boolean` \| `string`   | `true`             | Section heading above the generated documentation. `true` emits an "API" heading, `false` leaves the heading out, and a string replaces the heading text.                                                                                                                                                                |
+| `headingLevel?` | `number`                | `4`                | Heading level for the section heading (1–6). Generated headings are nested below it, whether or not the section heading is shown. Nested headings that would exceed level 6 are rendered as bold text. The default suits placement under a level-three "Library" section, as in mdat's readme template.                  |
 | `include?`      | `string`\[]             | `undefined`        | Names of top-level exports to document. Supports `*` wildcards, e.g. `['greet', '*Options']`. A namespace is included with all of its members. Everything is documented when omitted.                                                                                                                                    |
 | `sort?`         | `SortStrategy`\[]       | `['source-order']` | [TypeDoc sort strategies](https://typedoc.org/documents/Options.Organization.html#sort) applied to members, in priority order. `source-order` and `alphabetical` are the useful ones for a readme; `kind`, `static-first`, `instance-first`, `visibility`, and `required-first` also affect class and interface members. |
 | `tsconfig?`     | `string`                | `undefined`        | Path to a `tsconfig.json`, relative to the working directory. TypeDoc finds the nearest one when omitted.                                                                                                                                                                                                                |
 
-<!-- /api -->
+<!-- /api-help -->
 
 ## Maintainers
 
@@ -233,7 +252,7 @@ format: 'compact', include: ['greet', '*Options'] }) -->`.
 
 ## Contributing
 
-[Issues](https://github.com/kitschpatrol/mdat-plugin-api/issues) are welcome and appreciated.
+[Issues](https://github.com/kitschpatrol/mdat-plugin-api-help/issues) are welcome and appreciated.
 
 Please open an issue to discuss changes before submitting a pull request. Unsolicited PRs (especially AI-generated ones) are unlikely to be merged.
 

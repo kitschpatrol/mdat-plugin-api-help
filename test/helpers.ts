@@ -11,7 +11,8 @@ export function fixture(relativePath: string): string {
 }
 
 /**
- * Generate API Markdown with the plugin's default options.
+ * Generate API Markdown with the plugin's default options, with the shallowest
+ * headings at level 3.
  */
 export async function generate(
 	entryPoint: string,

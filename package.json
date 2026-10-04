@@ -1,5 +1,5 @@
 {
-	"name": "mdat-plugin-api",
+	"name": "mdat-plugin-api-help",
 	"version": "0.2.0",
 	"description": "Mdat plugin to generate API documentation from TypeScript source files using JSDoc and type information.",
 	"keywords": [
@@ -11,11 +11,11 @@
 		"typescript",
 		"documentation"
 	],
-	"homepage": "https://github.com/kitschpatrol/mdat-plugin-api",
-	"bugs": "https://github.com/kitschpatrol/mdat-plugin-api/issues",
+	"homepage": "https://github.com/kitschpatrol/mdat-plugin-api-help",
+	"bugs": "https://github.com/kitschpatrol/mdat-plugin-api-help/issues",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/kitschpatrol/mdat-plugin-api.git"
+		"url": "git+https://github.com/kitschpatrol/mdat-plugin-api-help.git"
 	},
 	"license": "MIT",
 	"author": {

@@ -1,6 +1,6 @@
 import { mdatConfig } from '@kitschpatrol/mdat-config'
-import apiPlugin from './src'
+import apiHelpPlugin from './src'
 
 export default mdatConfig({
-	...apiPlugin,
+	...apiHelpPlugin,
 })

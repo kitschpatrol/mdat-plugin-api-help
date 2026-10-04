@@ -10,7 +10,7 @@ const projectDirectory = path.join(fixturesDirectory, 'project')
 const temporaryDirectories: string[] = []
 
 async function createProject(files: Record<string, string>): Promise<string> {
-	const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'mdat-plugin-api-test-'))
+	const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'mdat-plugin-api-help-test-'))
 	temporaryDirectories.push(directory)
 
 	for (const [file, content] of Object.entries(files)) {

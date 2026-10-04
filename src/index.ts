@@ -1,3 +1,4 @@
+import type { Rule } from 'mdat'
 import type { SortStrategy } from 'typedoc'
 import { defineConfig } from 'mdat'
 import path from 'node:path'
@@ -6,13 +7,15 @@ import { getApiMarkdown } from './utilities/get-api-markdown'
 import { resolveEntryPoint } from './utilities/resolve-entry-point'
 export { setLogger } from './utilities/log'
 
+const DEFAULT_HEADING = 'API'
+
 /**
- * Options for the `<!-- api -->` rule.
+ * Options for the `<!-- api-help -->` rule.
  *
- * Pass them as a JSON5 object in the placeholder comment, e.g. `<!-- api({
+ * Pass them as a JSON5 object in the placeholder comment, e.g. `<!-- api-help({
  * format: 'compact', include: ['greet', '*Options'] }) -->`.
  */
-export type ApiRuleOptions = {
+export type ApiHelpRuleOptions = {
 	/**
 	 * Path to the TypeScript entry point, relative to the working directory. When
 	 * omitted, it's inferred from `package.json` (`exports`, `types`, `main`,
@@ -41,10 +44,20 @@ export type ApiRuleOptions = {
 	 */
 	groupByKind?: boolean
 	/**
-	 * Heading level for the shallowest headings in the generated Markdown (1–6).
-	 * Nested headings that would exceed level 6 are rendered as bold text.
+	 * Section heading above the generated documentation. `true` emits an "API"
+	 * heading, `false` leaves the heading out, and a string replaces the heading
+	 * text.
 	 *
-	 * @defaultValue 3
+	 * @defaultValue true
+	 */
+	heading?: boolean | string
+	/**
+	 * Heading level for the section heading (1–6). Generated headings are nested
+	 * below it, whether or not the section heading is shown. Nested headings that
+	 * would exceed level 6 are rendered as bold text. The default suits placement
+	 * under a level-three "Library" section, as in mdat's readme template.
+	 *
+	 * @defaultValue 4
 	 */
 	headingLevel?: number
 	/**
@@ -93,11 +106,41 @@ const optionsSchema = z.strictObject({
 	exclude: z.array(z.string()).default([]),
 	format: z.enum(['compact', 'full']).default('full'),
 	groupByKind: z.boolean().default(true),
-	headingLevel: z.number().int().min(1).max(6).default(3),
+	heading: z.union([z.boolean(), z.string().trim().min(1)]).default(true),
+	headingLevel: z.number().int().min(1).max(6).default(4),
 	include: z.array(z.string()).default([]),
 	sort: z.array(z.enum(SORT_STRATEGIES)).default(['source-order']),
 	tsconfig: z.string().optional(),
 })
+
+const apiHelpRule: Rule = {
+	async content(options) {
+		const parsed = optionsSchema.safeParse(options ?? {})
+		if (!parsed.success) {
+			throw new Error(
+				`Invalid options for the <!-- api-help --> rule:\n${z.prettifyError(parsed.error)}`,
+			)
+		}
+
+		const { entryPoint, heading, headingLevel, tsconfig, ...rest } = parsed.data
+
+		// Generated headings sit one level below the section heading, whether or
+		// not the section heading is shown
+		const apiMarkdown = await getApiMarkdown({
+			...rest,
+			entryPoint: await resolveEntryPoint(entryPoint),
+			headingLevel: headingLevel + 1,
+			...(tsconfig !== undefined && { tsconfig: path.resolve(tsconfig) }),
+		})
+
+		if (heading === false) {
+			return apiMarkdown
+		}
+
+		const headingText = heading === true ? DEFAULT_HEADING : heading
+		return `${'#'.repeat(headingLevel)} ${headingText}\n\n${apiMarkdown}`
+	},
+}
 
 /**
  * Mdat plugin that generates API documentation from TypeScript source files.
@@ -105,36 +148,18 @@ const optionsSchema = z.strictObject({
  * Uses TypeDoc to extract JSDoc descriptions, type signatures, `@example`
  * blocks, and parameter tables from a package's public exports.
  *
- * Register it in your `mdat.config.ts`, then add `<!-- api -->` placeholder
- * comments to your Markdown files.
+ * Register it in your `mdat.config.ts`, then add `<!-- api-help -->`
+ * placeholder comments to your Markdown files. The rule is also aliased as
+ * `<!-- api -->`.
  *
  * @example
  * 	import { defineConfig } from 'mdat'
- * 	import apiPlugin from 'mdat-plugin-api'
+ * 	import apiHelpPlugin from 'mdat-plugin-api-help'
  *
  * 	export default defineConfig({
- * 		...apiPlugin,
+ * 		...apiHelpPlugin,
  * 	})
  */
-const apiPlugin = defineConfig({
-	api: {
-		async content(options) {
-			const parsed = optionsSchema.safeParse(options ?? {})
-			if (!parsed.success) {
-				throw new Error(
-					`Invalid options for the <!-- api --> rule:\n${z.prettifyError(parsed.error)}`,
-				)
-			}
+const apiHelpPlugin = defineConfig({ api: apiHelpRule, 'api-help': apiHelpRule })
 
-			const { entryPoint, tsconfig, ...rest } = parsed.data
-
-			return getApiMarkdown({
-				...rest,
-				entryPoint: await resolveEntryPoint(entryPoint),
-				...(tsconfig !== undefined && { tsconfig: path.resolve(tsconfig) }),
-			})
-		},
-	},
-})
-
-export default apiPlugin
+export default apiHelpPlugin
