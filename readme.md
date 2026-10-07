@@ -32,17 +32,29 @@ Two formats are available. The full format documents every export in detail. The
 
 ## Getting started
 
+<!-- dependencies -->
+
 ### Dependencies
 
-You'll need [mdat](https://github.com/kitschpatrol/mdat) installed either globally or in your project. Your project also needs TypeScript 5 or 6, which TypeDoc uses to read your code.
+- [Node.js](https://nodejs.org/) 24.16.0 or newer (specifically `^24.16.0 || >=26.3.0`)
+- [mdat](https://www.npmjs.com/package/mdat) `^3.0.0` _(peer dependency)_
+- [typescript](https://www.npmjs.com/package/typescript) `^5.0.0 || ^6.0.0` _(peer dependency)_
+
+<!-- /dependencies -->
+
+You'll need [mdat](https://github.com/kitschpatrol/mdat) installed either globally or in your project. TypeDoc uses your project's TypeScript to read your code.
+
+<!-- install({ dev: true }) -->
 
 ### Installation
 
-Install the plugin as a development dependency:
+Add it to your project as a development dependency:
 
-```bash
-pnpm add -D mdat-plugin-api-help
+```sh
+npm install --save-dev mdat-plugin-api-help
 ```
+
+<!-- /install -->
 
 Register the plugin in your mdat config file, e.g. `mdat.config.ts`:
 
