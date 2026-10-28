@@ -304,7 +304,7 @@ Create a new greeting generator.
 
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
-| \`language\` | [\`Language\`](#language) | \`'en'\` | The default language for greetings |
+| \`language?\` | [\`Language\`](#language) | \`'en'\` | The default language for greetings |
 
 ##### Methods
 
