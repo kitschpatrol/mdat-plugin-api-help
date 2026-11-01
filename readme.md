@@ -226,7 +226,7 @@ Build output paths are mapped back to their source, so a field pointing at `./di
 
 ### Logging
 
-The plugin logs through [lognow](https://github.com/kitschpatrol/lognow). TypeDoc's own messages are routed through the same logger, with its informational output and validation warnings at the debug level. Pass your own logger to the exported `setLogger()` function to capture everything; it accepts a console-like object or a [LogLayer](https://loglayer.dev) instance.
+The plugin logs through [lognow](https://github.com/kitschpatrol/lognow). TypeDoc's own messages are routed through the same logger, with its informational output and validation warnings at the debug level. Pass your own logger to the exported `setLogger()` function to capture everything; it accepts a console-like object, a stream with a `write` method, or a [LogLayer](https://loglayer.dev) instance.
 
 <!-- api-help({ include: ['ApiHelpRuleOptions'], groupByKind: false, headingLevel: 2 }) -->
 
