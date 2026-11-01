@@ -9,6 +9,8 @@ peerDependencyRules:
 permissions:
   '@kitschpatrol/shared-config':
     skills: true
+  mdat:
+    skills: true
 publicHoistPattern:
   - '@kitschpatrol/repo-config'
   - '@kitschpatrol/typescript-config'
