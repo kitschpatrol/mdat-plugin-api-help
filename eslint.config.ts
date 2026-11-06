@@ -1,6 +1,7 @@
 import { eslintConfig } from '@kitschpatrol/eslint-config'
 
 export default eslintConfig({
+	ignores: ['**/changelog.md'],
 	ts: {
 		overrides: {
 			// Allow the TSDoc-standard defaultValue tag, which TypeDoc renders as a
